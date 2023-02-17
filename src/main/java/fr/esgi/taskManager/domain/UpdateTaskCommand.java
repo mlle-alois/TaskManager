@@ -1,5 +1,7 @@
 package fr.esgi.taskManager.domain;
 
+import fr.esgi.taskManager.domain.model.TaskStatus;
+
 import java.time.LocalDate;
 
 public class UpdateTaskCommand implements Command {

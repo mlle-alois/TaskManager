@@ -1,5 +1,5 @@
 package fr.esgi.taskManager.domain;
 
-public interface Query<T> {
-    T execute();
+public interface Query<R> {
+    R execute();
 }

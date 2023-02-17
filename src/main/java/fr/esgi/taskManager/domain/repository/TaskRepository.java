@@ -1,4 +1,6 @@
-package fr.esgi.taskManager.domain;
+package fr.esgi.taskManager.domain.repository;
+
+import fr.esgi.taskManager.domain.model.Task;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package fr.esgi.taskManager.domain;
+package fr.esgi.taskManager.domain.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

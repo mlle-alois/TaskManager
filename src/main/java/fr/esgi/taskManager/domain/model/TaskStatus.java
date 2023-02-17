@@ -1,4 +1,4 @@
-package fr.esgi.taskManager.domain;
+package fr.esgi.taskManager.domain.model;
 
 public enum TaskStatus {
     TODO,

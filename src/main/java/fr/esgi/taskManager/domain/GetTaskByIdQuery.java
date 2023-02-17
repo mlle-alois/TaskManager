@@ -1,5 +1,7 @@
 package fr.esgi.taskManager.domain;
 
+import fr.esgi.taskManager.domain.model.Task;
+
 public class GetTaskByIdQuery implements Query<Task> {
     private final int id;
 

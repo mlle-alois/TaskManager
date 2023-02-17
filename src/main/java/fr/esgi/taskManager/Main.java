@@ -1,5 +1,7 @@
 package fr.esgi.taskManager;
 
+import java.io.IOException;
+
 public class Main {
     private static String filename = System.getProperty("user.home") + "/.consoleagenda/log.txt";
 
