@@ -1,6 +1,5 @@
 package fr.esgi.taskManager.domain.model;
 
 public enum TaskStatus {
-    TODO,
-    DONE
+    TODO, IN_PROGRESS, DONE
 }

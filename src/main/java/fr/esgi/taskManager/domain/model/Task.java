@@ -4,14 +4,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Task {
-    private int id;
+    private TaskId id;
     private String content;
     private LocalDate dueDate;
     private TaskStatus status;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
 
-    // Constructor and getters
+    public Task(String content, LocalDate dueDate){
+        this.content = content;
+        this.dueDate = dueDate;
+        this.status = TaskStatus.TODO;
+        this.creationDate = LocalDateTime.now();
+    }
 
     public boolean isOverdue() {
         return dueDate.isBefore(LocalDate.now());
@@ -21,7 +26,9 @@ public class Task {
         this.content = content;
         this.modificationDate = LocalDateTime.now();
     }
-
+    public void setId(TaskId id) {
+        this.id = id;
+    }
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
         this.modificationDate = LocalDateTime.now();
@@ -32,4 +39,27 @@ public class Task {
         this.modificationDate = LocalDateTime.now();
     }
 
+    public TaskId getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public LocalDateTime getModificationDate() {
+        return modificationDate;
+    }
 }
