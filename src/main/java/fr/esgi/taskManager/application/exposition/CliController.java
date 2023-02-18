@@ -4,44 +4,35 @@ import fr.esgi.taskManager.domain.command.*;
 import fr.esgi.taskManager.domain.model.Task;
 import fr.esgi.taskManager.domain.model.TaskStatus;
 import fr.esgi.taskManager.domain.query.GetAllTasksQuery;
-import fr.esgi.taskManager.domain.query.GetAllTasksQueryHandler;
 import fr.esgi.taskManager.domain.query.GetTaskByIdQuery;
-import fr.esgi.taskManager.domain.query.GetTaskByIdQueryHandler;
+import fr.esgi.taskManager.kernel.CommandBus;
+import fr.esgi.taskManager.kernel.QueryBus;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class CliController {
     private final Scanner scanner;
-    private final AddTaskCommandHandler addTaskCommandHandler;
-    private final RemoveTaskCommandHandler removeTaskCommandHandler;
-    private final UpdateTaskCommandHandler updateTaskCommandHandler;
-    private final GetAllTasksQueryHandler getAllTasksQueryHandler;
-    private final GetTaskByIdQueryHandler getTaskByIdQueryHandler;
+    private final CommandBus commandBus;
+    private final QueryBus queryBus;
+    private static final Logger logger = Logger.getLogger(CliController.class.getName());
 
-    public CliController( Scanner scanner,
-                          AddTaskCommandHandler addTaskCommandHandler,
-                          RemoveTaskCommandHandler removeTaskCommandHandler,
-                          UpdateTaskCommandHandler updateTaskCommandHandler,
-                          GetAllTasksQueryHandler getAllTasksQueryHandler,
-                          GetTaskByIdQueryHandler getTaskByIdQueryHandler) {
+    public CliController(Scanner scanner, CommandBus commandHandlers, QueryBus queryHandlers) {
         this.scanner = scanner;
-        this.addTaskCommandHandler = addTaskCommandHandler;
-        this.removeTaskCommandHandler = removeTaskCommandHandler;
-        this.updateTaskCommandHandler = updateTaskCommandHandler;
-        this.getAllTasksQueryHandler = getAllTasksQueryHandler;
-        this.getTaskByIdQueryHandler = getTaskByIdQueryHandler;
+        this.commandBus = commandHandlers;
+        this.queryBus = queryHandlers;
     }
 
     public void start() {
-        System.out.println("Welcome to the Task Manager CLI!");
+        logger.info("Welcome to the Task Manager CLI!");
 
         boolean keepRunning = true;
         while (keepRunning) {
-            System.out.println("Please enter a command:");
+            logger.info("Please enter a command:");
 
             String command = scanner.nextLine().trim();
             String[] commandParts = command.split("\\s+");
@@ -54,20 +45,20 @@ public class CliController {
                     keepRunning = false;
                     break;
                 default:
-                    System.out.println("Unknown command. Please try again.");
+                    logger.info("Unknown command. Please try again.");
             }
         }
 
-        System.out.println("Exiting Task Manager CLI. Goodbye!");
+        logger.info("Exiting Task Manager CLI. Goodbye!");
     }
 
     private void handleAgendaCommand(String[] commandParts) {
         if (commandParts.length == 1) {
-            System.out.println("Please provide a subcommand. Use 'agenda help' for more information.");
+            logger.info("Please provide a subcommand. Use 'agenda help' for more information.");
             return;
         }
 
-        switch (commandParts[1]) {
+        switch (commandParts[1].trim().toLowerCase()) {
             case "add":
                 handleAddCommand(commandParts);
                 break;
@@ -84,32 +75,32 @@ public class CliController {
                 handleGetCommand(commandParts);
                 break;
             case "help":
-                System.out.println("Agenda subcommands:");
-                System.out.println("  add -c <content> [-d <due_date>] [-s <status>]");
-                System.out.println("  remove <id>");
-                System.out.println("  update <id> [-c <content>] [-d <due_date>] [-s <status>]");
-                System.out.println("  list");
-                System.out.println("  get <id>");
-                System.out.println("  help");
+                logger.info("Agenda subcommands:");
+                logger.info("  add -c:<content> -d:<due_date>");
+                logger.info("  remove <id>");
+                logger.info("  update <id> [-c:<content>] [-d:<due_date>] [-s:<status>]");
+                logger.info("  list");
+                logger.info("  get <id>");
+                logger.info("  help");
                 break;
             default:
-                System.out.println("Unknown subcommand. Use 'agenda help' for more information.");
+                logger.info("Unknown subcommand. Use 'agenda help' for more information.");
         }
     }
 
     public void handleListCommand() {
-        List<Task> tasks = getAllTasksQueryHandler.handle(new GetAllTasksQuery());
+        List<Task> tasks = queryBus.send(new GetAllTasksQuery());
 
         tasks.stream()
                 .sorted(Comparator.comparing(Task::getCreationDate).reversed())
                 .forEach(task -> {
-                    System.out.println(task.toString());
+                    logger.info(task.toString());
                 });
     }
 
     public void handleGetCommand(String[] commandParts) {
         if (commandParts.length != 2) {
-            System.out.println("Invalid command syntax. Usage: agenda remove <id>");
+            logger.info("Invalid command syntax. Usage: agenda remove <id>");
             return;
         }
 
@@ -117,17 +108,17 @@ public class CliController {
         try {
             id = Integer.parseInt(commandParts[1]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid task ID: " + commandParts[1]);
+            logger.info("Invalid task ID: " + commandParts[1]);
             return;
         }
 
-        var task = getTaskByIdQueryHandler.handle(new GetTaskByIdQuery(id));
-        System.out.println(task.toString());
+        var task = queryBus.send(new GetTaskByIdQuery(id));
+        logger.info(task.toString());
     }
 
     private void handleUpdateCommand(String[] commandParts) {
         if (commandParts.length < 4) {
-            System.out.println("Invalid command syntax. Usage: agenda update <id> [-c <content>] [-d <due date>] [-s <status>]");
+            logger.info("Invalid command syntax. Usage: agenda update <id> [-c <content>] [-d <due date>] [-s <status>]");
             return;
         }
 
@@ -135,7 +126,7 @@ public class CliController {
         try {
             id = Integer.parseInt(commandParts[1]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid task ID: " + commandParts[1]);
+            logger.info("Invalid task ID: " + commandParts[1]);
             return;
         }
 
@@ -149,33 +140,33 @@ public class CliController {
                 try {
                     dueDate = LocalDate.parse(part.substring(4));
                 } catch (DateTimeParseException e) {
-                    System.out.println("Invalid due date: " + part.substring(4));
+                    logger.info("Invalid due date: " + part.substring(4));
                     return;
                 }
             } else if (part.startsWith("-C:")) {
                 try {
                     content = part.substring(4);
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Invalid status: " + part.substring(4));
+                    logger.info("Invalid status: " + part.substring(4));
                     return;
                 }
             }else if (part.startsWith("-s:")) {
                 try {
                     status = TaskStatus.valueOf(part.substring(4).toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Invalid status: " + part.substring(4));
+                    logger.info("Invalid status: " + part.substring(4));
                     return;
                 }
             }
         }
         var command = new UpdateTaskCommand(id,content, dueDate, status);
-        updateTaskCommandHandler.handle(command);
-        System.out.println("Task with ID " + id + " updated successfully");
+        commandBus.send(command);
+        logger.info("Task with ID " + id + " updated successfully");
     }
 
     private void handleRemoveCommand(String[] commandParts) {
         if (commandParts.length != 2) {
-            System.out.println("Invalid command syntax. Usage: agenda remove <id>");
+            logger.info("Invalid command syntax. Usage: agenda remove <id>");
             return;
         }
 
@@ -183,14 +174,14 @@ public class CliController {
         try {
             id = Integer.parseInt(commandParts[1]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid task ID: " + commandParts[1]);
+            logger.info("Invalid task ID: " + commandParts[1]);
             return;
         }
 
         var command = new RemoveTaskCommand(id);
-        removeTaskCommandHandler.handle(command);
+        commandBus.send(command);
 
-        System.out.println("Task with ID " + id + " removed successfully");
+        logger.info("Task with ID " + id + " removed successfully");
     }
 
     private void handleAddCommand(String[] commandParts) {
@@ -207,14 +198,14 @@ public class CliController {
         }
 
         if (content == null) {
-            System.out.println("Content is required for adding a task");
+            logger.info("Content is required for adding a task");
             return;
         }
 
         var command = new AddTaskCommand(content, dueDate);
-        addTaskCommandHandler.handle(command);
+        commandBus.send(command);
 
-        System.out.println("Task added successfully");
+        logger.info("Task added successfully");
     }
 
 }

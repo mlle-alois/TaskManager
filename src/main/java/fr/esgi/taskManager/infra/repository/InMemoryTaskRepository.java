@@ -7,7 +7,7 @@ import fr.esgi.taskManager.domain.repository.TaskRepository;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InMemoryTaskRepository implements TaskRepository<TaskId,Task> {
+public class InMemoryTaskRepository implements TaskRepository {
     private final AtomicInteger count = new AtomicInteger(0);
     private Map<TaskId,Task> tasks = new HashMap<>();
 

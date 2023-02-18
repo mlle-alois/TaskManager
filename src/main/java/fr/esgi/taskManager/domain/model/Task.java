@@ -62,4 +62,16 @@ public class Task {
     public LocalDateTime getModificationDate() {
         return modificationDate;
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id.value() +
+                ", content='" + content + '\'' +
+                ", dueDate=" + dueDate +
+                ", status=" + status +
+                ", creationDate=" + creationDate +
+                ", modificationDate=" + modificationDate +
+                '}';
+    }
 }
