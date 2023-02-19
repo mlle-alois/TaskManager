@@ -29,7 +29,7 @@ public class JsonTaskRepositoryTest {
     @Test
     public void delete_task_in_file() throws IOException {
         // Given
-        JsonTaskRepository jsonTaskRepository = new JsonTaskRepository("src/test/java/FileRepo/tasksRemove.json");
+        JsonTaskRepository jsonTaskRepository = new JsonTaskRepository("tasks.json");
         // When
         Task basicTask = new Task("content to erase", LocalDate.now());
         var taskSaved = jsonTaskRepository.save(basicTask);
@@ -47,7 +47,7 @@ public class JsonTaskRepositoryTest {
     @Test
     public void modify_task_in_file() throws IOException {
         // Given
-        JsonTaskRepository jsonTaskRepository = new JsonTaskRepository("src/test/java/FileRepo/tasksRemove.json");
+        JsonTaskRepository jsonTaskRepository = new JsonTaskRepository("tasks.json");
         // When
         var lastTaskToModify = jsonTaskRepository.findAll().stream().reduce((first, second) -> second).get();
         lastTaskToModify.setContent("modify test");
