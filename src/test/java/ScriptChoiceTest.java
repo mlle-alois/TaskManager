@@ -1,4 +1,4 @@
-import fr.esgi.taskManager.infra.input.ScriptChoice;
+import fr.esgi.taskmanager.infra.input.ScriptChoice;
 import org.junit.jupiter.api.Test;
 
 public class ScriptChoiceTest {
