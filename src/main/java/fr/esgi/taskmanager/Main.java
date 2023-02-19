@@ -1,6 +1,7 @@
 package fr.esgi.taskmanager;
 
-import fr.esgi.taskmanager.application.exposition.CliController;
+
+import fr.esgi.taskmanager.application.exposition.EntryPointController;
 import fr.esgi.taskmanager.domain.command.*;
 
 import fr.esgi.taskmanager.domain.query.GetAllTasksQuery;
@@ -12,7 +13,6 @@ import fr.esgi.taskmanager.kernel.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -32,8 +32,8 @@ public class Main {
 
         var commandBus = new SimpleCommandBus(commandHandlerMap);
         var queryBus = new SimpleQueryBus(queryHandlerMap);
-        var controller = new CliController(commandBus,queryBus);
-        controller.start();
+        var controller = new EntryPointController(commandBus,queryBus);
+        controller.handleAgendaCommand(args);
     }
 }
 
