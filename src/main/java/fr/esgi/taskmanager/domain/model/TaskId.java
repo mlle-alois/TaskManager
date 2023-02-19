@@ -2,7 +2,21 @@ package fr.esgi.taskmanager.domain.model;
 
 import java.util.Objects;
 
-public record TaskId(Integer value) {
+public class TaskId {
+    private Integer value;
+
+    public TaskId(Integer value) {
+        this.value = value;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
