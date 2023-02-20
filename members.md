@@ -33,3 +33,4 @@ La configuation à appliquer pour le jar est la suivante :
 ![Schema de conception](images/config-jar.png)
 
 Vous pouvez également exécuter directement le jar via le script `run.sh` et les tests via le script `test.sh`.
+(erreur sur 3 tests à cause de la variable d'environnement)
