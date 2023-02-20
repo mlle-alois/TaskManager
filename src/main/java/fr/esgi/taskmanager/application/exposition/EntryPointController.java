@@ -55,7 +55,7 @@ public class EntryPointController {
                 break;
             case "help":
                 logger.info("Agenda subcommands:");
-                logger.info("  add -c: <content> -d:<due_date>");
+                logger.info("  add -c:<content> -d:<due_date>");
                 logger.info("  remove <id>");
                 logger.info("  update <id> [-c:<content>] [-d:<due_date>] [-s:<status>]");
                 logger.info("  list");
@@ -70,7 +70,7 @@ public class EntryPointController {
     public void handleListCommand() {
         List<Task> tasks = queryBus.send(new GetAllTasksQuery());
 
-        tasks.stream()
+        if(tasks!= null) tasks.stream()
                 .sorted(Comparator.comparing(Task::getCreationDate).reversed())
                 .forEach(task -> {
                     logger.info(task.toString());
@@ -80,16 +80,16 @@ public class EntryPointController {
 
 
     public void handleGetCommand(String[] commandParts) {
-        if (commandParts.length != 2) {
+        if (commandParts.length != 3) {
             logger.info("Invalid command syntax. Usage: agenda remove <id>");
             return;
         }
 
         int id;
         try {
-            id = Integer.parseInt(commandParts[1]);
+            id = Integer.parseInt(commandParts[2]);
         } catch (NumberFormatException e) {
-            logger.info("Invalid task ID: " + commandParts[1]);
+            logger.info("Invalid task ID: " + commandParts[2]);
             return;
         }
 
@@ -99,15 +99,15 @@ public class EntryPointController {
 
     private void handleUpdateCommand(String[] commandParts) {
         if (commandParts.length < 4) {
-            logger.info("Invalid command syntax. Usage: agenda update <id> [-c: <content>] [-d: <due date>] [-s: <status>]");
+            logger.info("Invalid command syntax. Usage: agenda update <id> [-c:<content>] [-d:<due date>] [-s:<status>]");
             return;
         }
 
         int id;
         try {
-            id = Integer.parseInt(commandParts[1]);
+            id = Integer.parseInt(commandParts[2]);
         } catch (NumberFormatException e) {
-            logger.info("Invalid task ID: " + commandParts[1]);
+            logger.info("Invalid task ID: " + commandParts[2]);
             return;
         }
 
@@ -115,27 +115,27 @@ public class EntryPointController {
         TaskStatus status = null;
         String content = null;
 
-        for (int i = 2; i < commandParts.length; i++) {
+        for (int i = 3; i < commandParts.length; i++) {
             String part = commandParts[i];
             if (part.startsWith("-d:")) {
                 try {
-                    dueDate = LocalDate.parse(part.substring(4));
+                    dueDate = LocalDate.parse(part.substring(3));
                 } catch (DateTimeParseException e) {
-                    logger.info("Invalid due date: " + part.substring(4));
+                    logger.info("Invalid due date: " + part.substring(3));
                     return;
                 }
             } else if (part.startsWith("-c:")) {
                 try {
-                    content = part.substring(4);
+                    content = part.substring(3);
                 } catch (IllegalArgumentException e) {
-                    logger.info("Invalid status: " + part.substring(4));
+                    logger.info("Invalid status: " + part.substring(3));
                     return;
                 }
             } else if (part.startsWith("-s:")) {
                 try {
-                    status = TaskStatus.valueOf(part.substring(4).toUpperCase());
+                    status = TaskStatus.valueOf(part.substring(3).toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    logger.info("Invalid status: " + part.substring(4));
+                    logger.info("Invalid status: " + part.substring(3));
                     return;
                 }
             }
@@ -147,29 +147,29 @@ public class EntryPointController {
 
     private void handleUpdateStateTaskCommand(String[] commandParts) {
         if (commandParts.length < 4) {
-            logger.info("Invalid command syntax. Usage: agenda update <id> [-c: <content>] [-d: <due date>] [-s: <status>]");
+            logger.info("Invalid command syntax. Usage: agenda update <id> [-c:<content>] [-d:<due date>] [-s:<status>]");
             return;
         }
 
         int id;
         try {
-            id = Integer.parseInt(commandParts[1]);
+            id = Integer.parseInt(commandParts[2]);
         } catch (NumberFormatException e) {
-            logger.info("Invalid task ID: " + commandParts[1]);
+            logger.info("Invalid task ID: " + commandParts[2]);
             return;
         }
 
         TaskStatus status = null;
 
 
-        for (int i = 2; i < commandParts.length; i++) {
+        for (int i = 3; i < commandParts.length; i++) {
             String part = commandParts[i];
 
             if (part.startsWith("-s:")) {
                 try {
-                    status = TaskStatus.valueOf(part.substring(4).toUpperCase());
+                    status = TaskStatus.valueOf(part.substring(3).toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    logger.info("Invalid status: " + part.substring(4));
+                    logger.info("Invalid status: " + part.substring(3));
                     return;
                 }
             }
@@ -180,16 +180,16 @@ public class EntryPointController {
     }
 
     private void handleRemoveCommand(String[] commandParts) {
-        if (commandParts.length != 2) {
+        if (commandParts.length != 3) {
             logger.info("Invalid command syntax. Usage: agenda remove <id>");
             return;
         }
 
         int id;
         try {
-            id = Integer.parseInt(commandParts[1]);
+            id = Integer.parseInt(commandParts[2]);
         } catch (NumberFormatException e) {
-            logger.info("Invalid task ID: " + commandParts[1]);
+            logger.info("Invalid task ID: " + commandParts[2]);
             return;
         }
 

@@ -17,23 +17,20 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class EntryPointControllerTest {
-    private static final String ADD_COMMAND = "agenda add -c task -d:2023-12-31";
+    private static final String ADD_COMMAND = "agenda add -c:task -d:2023-12-31";
     private static final String REMOVE_COMMAND = "agenda remove 1";
-    private static final String UPDATE_COMMAND = "agenda update 1 -c newContent -d:2024-06-30 -s:IN_PROGRESS";
+    private static final String UPDATE_COMMAND = "agenda update 1 -c:newContent -d:2024-06-30 -s:PROGRESS";
     private static final String LIST_COMMAND = "agenda list";
     private static final String GET_COMMAND = "agenda get 1";
-    private static final String UPDATE_STATE_COMMAND = "agenda updatestate 1 -s:IN_PROGRESS";
+    private static final String UPDATE_STATE_COMMAND = "agenda updatestate 1 -s:PROGRESS";
     private static final LocalDate DUE_DATE = LocalDate.of(2023, 12, 31);
-    private static final TaskStatus STATUS = TaskStatus.DONE;
+    private static final TaskStatus STATUS = TaskStatus.PROGRESS;
 
     private EntryPointController controller;
 
@@ -73,11 +70,12 @@ public class EntryPointControllerTest {
     @Test
     void testHandleAgendaCommand_list() {
         List<Task> tasks = Collections.singletonList(new Task("task", DUE_DATE));
-        when(queryBus.send(new GetAllTasksQuery())).thenReturn(tasks);
+        var query = new GetAllTasksQuery();
+        when(queryBus.send(query)).thenReturn(tasks);
 
         controller.handleAgendaCommand(LIST_COMMAND.split(" "));
 
-        verify(queryBus).send(new GetAllTasksQuery());
+        verify(queryBus).send(query);
     }
 
     @Test
