@@ -28,4 +28,4 @@ Afin d'exécuter les tests, il faut :
 - suivre les étapes précédentes et appliquer les variables d'environnement à la configuration de test
 - clic droit sur le répertoire `test` et cliquer sur `Run 'All Tests'`
 
-Vous disposez d'un script permettant de générer un fichier jar exécutable. Pour cela, lancez le script `jar-generator.sh`
+Il existe un fichier jar exécutable disponible dans le répertoire `out/artifacts/consoleagenda_jar`.
