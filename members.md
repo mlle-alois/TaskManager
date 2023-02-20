@@ -27,6 +27,7 @@ le chemin `C:\Users\{user}\.consoleagenda\tasks.json`
 Afin d'exécuter les tests, il faut :
 - suivre les étapes précédentes et appliquer les variables d'environnement à la configuration de test
 - clic droit sur le répertoire `test` et cliquer sur `Run 'All Tests'`
+  ![Schema de conception](images/tests.png)
 
 Il existe un fichier jar exécutable disponible dans le répertoire `out/artifacts/consoleagenda_jar`.
 La configuation à appliquer pour le jar est la suivante :
