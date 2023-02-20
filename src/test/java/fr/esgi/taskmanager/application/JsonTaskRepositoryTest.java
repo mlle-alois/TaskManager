@@ -22,7 +22,7 @@ public class JsonTaskRepositoryTest {
         // Then
         assert taskFound.isPresent();
         Assertions.assertEquals(taskSaved, taskFound.get());
-        jsonTaskRepository.delete(taskSaved.getId());
+//        jsonTaskRepository.delete(taskSaved.getId());
 
     }
 

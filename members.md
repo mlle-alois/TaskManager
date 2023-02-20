@@ -14,3 +14,7 @@ Notre architecture est une architecture hexagonale. L'application se compose de 
 Notre application est également réalisée en CQRS (Command Query Responsibility Segregation). Ainsi, nos commandes
 sont dans le répertoire `commands` et nos requêtes dans le répertoire `queries` eux-mêmes présents dans le 
 répertoire `domain`.
+
+Afin d'exécuter ce projet, il faut ajouter une variable d'environnement dans "Edit Configurations" : 
+`JAVA_TOOL_OPTIONS=--add-opens=java.base/java.time=ALL-UNNAMED`
+Il faut également ajouter des paramètres de saisie 

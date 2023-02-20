@@ -55,7 +55,7 @@ public class EntryPointController {
                 break;
             case "help":
                 logger.info("Agenda subcommands:");
-                logger.info("  add -c <content> -d:<due_date>");
+                logger.info("  add -c: <content> -d:<due_date>");
                 logger.info("  remove <id>");
                 logger.info("  update <id> [-c:<content>] [-d:<due_date>] [-s:<status>]");
                 logger.info("  list");
@@ -99,7 +99,7 @@ public class EntryPointController {
 
     private void handleUpdateCommand(String[] commandParts) {
         if (commandParts.length < 4) {
-            logger.info("Invalid command syntax. Usage: agenda update <id> [-c <content>] [-d <due date>] [-s <status>]");
+            logger.info("Invalid command syntax. Usage: agenda update <id> [-c: <content>] [-d: <due date>] [-s: <status>]");
             return;
         }
 
@@ -124,7 +124,7 @@ public class EntryPointController {
                     logger.info("Invalid due date: " + part.substring(4));
                     return;
                 }
-            } else if (part.startsWith("-c")) {
+            } else if (part.startsWith("-c:")) {
                 try {
                     content = part.substring(4);
                 } catch (IllegalArgumentException e) {
@@ -147,7 +147,7 @@ public class EntryPointController {
 
     private void handleUpdateStateTaskCommand(String[] commandParts) {
         if (commandParts.length < 4) {
-            logger.info("Invalid command syntax. Usage: agenda update <id> [-c <content>] [-d <due date>] [-s <status>]");
+            logger.info("Invalid command syntax. Usage: agenda update <id> [-c: <content>] [-d: <due date>] [-s: <status>]");
             return;
         }
 
@@ -204,7 +204,7 @@ public class EntryPointController {
         LocalDate dueDate = null;
 
         for (String part : commandParts) {
-            if (part.startsWith("-c ")) {
+            if (part.startsWith("-c:")) {
                 content = part.substring(3);
             } else if (part.startsWith("-d:")) {
                 String dateString = part.substring(3);
