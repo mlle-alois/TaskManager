@@ -29,3 +29,5 @@ Afin d'exécuter les tests, il faut :
 - clic droit sur le répertoire `test` et cliquer sur `Run 'All Tests'`
 
 Il existe un fichier jar exécutable disponible dans le répertoire `out/artifacts/consoleagenda_jar`.
+La configuation à appliquer pour le jar est la suivante :
+![Schema de conception](images/config-jar.png)
