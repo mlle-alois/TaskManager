@@ -31,7 +31,6 @@ public class EntryPointControllerTest {
     private static final String UPDATE_STATE_COMMAND = "agenda updatestate 1 -s:PROGRESS";
     private static final LocalDate DUE_DATE = LocalDate.of(2023, 12, 31);
     private static final TaskStatus STATUS = TaskStatus.PROGRESS;
-
     private EntryPointController controller;
 
     @Mock
@@ -70,12 +69,11 @@ public class EntryPointControllerTest {
     @Test
     void testHandleAgendaCommand_list() {
         List<Task> tasks = Collections.singletonList(new Task("task", DUE_DATE));
-        var query = new GetAllTasksQuery();
-        when(queryBus.send(query)).thenReturn(tasks);
+        when(queryBus.send(new GetAllTasksQuery())).thenReturn(tasks);
 
         controller.handleAgendaCommand(LIST_COMMAND.split(" "));
 
-        verify(queryBus).send(query);
+        verify(queryBus).send(new GetAllTasksQuery());
     }
 
     @Test
