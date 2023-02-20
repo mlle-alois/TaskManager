@@ -31,3 +31,5 @@ Afin d'exécuter les tests, il faut :
 Il existe un fichier jar exécutable disponible dans le répertoire `out/artifacts/consoleagenda_jar`.
 La configuation à appliquer pour le jar est la suivante :
 ![Schema de conception](images/config-jar.png)
+
+Vous pouvez également exécuter directement le jar via le script `run.sh` et les tests via le script `test.sh`.
