@@ -1,6 +1,6 @@
 Aloïs Zimmermann-Rosenthal\
 Ichaï Chtitski\
-Haithem Limam
+Haithem LIMAM
 
 ![Schema de conception](images/schema.png)
 
@@ -35,3 +35,4 @@ La configuation à appliquer pour le jar est la suivante :
 
 Vous pouvez également exécuter directement le jar via le script `run.sh` et les tests via le script `test.sh`.
 (erreur sur 3 tests à cause de la variable d'environnement)
+il faut ajouter la variable d'environnement 'JAVA_TOOL_OPTIONS=--add-opens=java.base/java.time=ALL-UNNAMED'
