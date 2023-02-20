@@ -6,6 +6,7 @@ import fr.esgi.taskmanager.domain.command.AddTaskCommand;
 import fr.esgi.taskmanager.domain.command.RemoveTaskCommand;
 import fr.esgi.taskmanager.domain.command.UpdateStatusTaskCommand;
 import fr.esgi.taskmanager.domain.command.UpdateTaskCommand;
+import fr.esgi.taskmanager.domain.log.LogCommand;
 import fr.esgi.taskmanager.domain.model.Task;
 import fr.esgi.taskmanager.domain.model.TaskStatus;
 import fr.esgi.taskmanager.domain.query.GetAllTasksQuery;
@@ -22,11 +23,13 @@ import java.util.logging.Logger;
 public class EntryPointController {
     private final CommandBus commandBus;
     private final QueryBus queryBus;
+    private final LogCommand logCommand;
     private static final Logger logger = Logger.getLogger(EntryPointController.class.getName());
 
-    public EntryPointController(CommandBus commandHandlers, QueryBus queryHandlers) {
+    public EntryPointController(CommandBus commandHandlers, QueryBus queryHandlers, LogCommand logCommand) {
         this.commandBus = commandHandlers;
         this.queryBus = queryHandlers;
+        this.logCommand = logCommand;
     }
 
     public void handleAgendaCommand(String[] commandParts) {
@@ -75,13 +78,15 @@ public class EntryPointController {
                 .forEach(task -> {
                     logger.info(task.toString());
                 });
+        logCommand.log("list",null,null);
     }
 
 
 
-    public void handleGetCommand(String[] commandParts) {
+    private void handleGetCommand(String[] commandParts) {
         if (commandParts.length != 3) {
-            logger.info("Invalid command syntax. Usage: agenda remove <id>");
+            logger.info("Invalid command syntax. Usage: agenda get <id>");
+            logCommand.log("get",commandParts,"Invalid command syntax. Usage: agenda get <id>");
             return;
         }
 
@@ -90,16 +95,19 @@ public class EntryPointController {
             id = Integer.parseInt(commandParts[2]);
         } catch (NumberFormatException e) {
             logger.info("Invalid task ID: " + commandParts[2]);
+            logCommand.log("get",commandParts,"Invalid task ID: " + commandParts[2]);
             return;
         }
 
         var task = queryBus.send(new GetTaskByIdQuery(id));
         logger.info(task.toString());
+        logCommand.log("get",commandParts,null);
     }
 
     private void handleUpdateCommand(String[] commandParts) {
         if (commandParts.length < 4) {
             logger.info("Invalid command syntax. Usage: agenda update <id> [-c:<content>] [-d:<due date>] [-s:<status>]");
+            logCommand.log("update",commandParts,"Invalid command syntax. Usage: agenda update <id> [-c:<content>] [-d:<due date>] [-s:<status>]");
             return;
         }
 
@@ -108,6 +116,7 @@ public class EntryPointController {
             id = Integer.parseInt(commandParts[2]);
         } catch (NumberFormatException e) {
             logger.info("Invalid task ID: " + commandParts[2]);
+            logCommand.log("update",commandParts,"Invalid task ID: " + commandParts[2]);
             return;
         }
 
@@ -122,6 +131,7 @@ public class EntryPointController {
                     dueDate = LocalDate.parse(part.substring(3));
                 } catch (DateTimeParseException e) {
                     logger.info("Invalid due date: " + part.substring(3));
+                    logCommand.log("update",commandParts,"Invalid due date: " + part.substring(3));
                     return;
                 }
             } else if (part.startsWith("-c:")) {
@@ -129,6 +139,7 @@ public class EntryPointController {
                     content = part.substring(3);
                 } catch (IllegalArgumentException e) {
                     logger.info("Invalid status: " + part.substring(3));
+                    logCommand.log("update",commandParts,"Invalid status: " + part.substring(3));
                     return;
                 }
             } else if (part.startsWith("-s:")) {
@@ -136,6 +147,7 @@ public class EntryPointController {
                     status = TaskStatus.valueOf(part.substring(3).toUpperCase());
                 } catch (IllegalArgumentException e) {
                     logger.info("Invalid status: " + part.substring(3));
+                    logCommand.log("update",commandParts,"Invalid status: " + part.substring(3));
                     return;
                 }
             }
@@ -143,11 +155,13 @@ public class EntryPointController {
         var command = new UpdateTaskCommand(id, content, dueDate, status);
         commandBus.send(command);
         logger.info("Task with ID " + id + " updated successfully");
+        logCommand.log("update",commandParts,null);
     }
 
     private void handleUpdateStateTaskCommand(String[] commandParts) {
         if (commandParts.length < 4) {
             logger.info("Invalid command syntax. Usage: agenda update <id> [-c:<content>] [-d:<due date>] [-s:<status>]");
+            logCommand.log("updatestate",commandParts,"Invalid command syntax. Usage: agenda update <id> [-c:<content>] [-d:<due date>] [-s:<status>]");
             return;
         }
 
@@ -156,6 +170,7 @@ public class EntryPointController {
             id = Integer.parseInt(commandParts[2]);
         } catch (NumberFormatException e) {
             logger.info("Invalid task ID: " + commandParts[2]);
+            logCommand.log("updatestate",commandParts,"Invalid task ID: " + commandParts[2]);
             return;
         }
 
@@ -170,6 +185,7 @@ public class EntryPointController {
                     status = TaskStatus.valueOf(part.substring(3).toUpperCase());
                 } catch (IllegalArgumentException e) {
                     logger.info("Invalid status: " + part.substring(3));
+                    logCommand.log("updatestate",commandParts,"Invalid status: " + part.substring(3));
                     return;
                 }
             }
@@ -177,11 +193,13 @@ public class EntryPointController {
         var command = new UpdateStatusTaskCommand(id, status);
         commandBus.send(command);
         logger.info("Task with ID " + id + "with :" + status + " updated successfully");
+        logCommand.log("updatestate",commandParts,null);
     }
 
     private void handleRemoveCommand(String[] commandParts) {
         if (commandParts.length != 3) {
             logger.info("Invalid command syntax. Usage: agenda remove <id>");
+            logCommand.log("remove",commandParts,"Invalid command syntax. Usage: agenda remove <id>");
             return;
         }
 
@@ -190,6 +208,7 @@ public class EntryPointController {
             id = Integer.parseInt(commandParts[2]);
         } catch (NumberFormatException e) {
             logger.info("Invalid task ID: " + commandParts[2]);
+            logCommand.log("remove",commandParts,"Invalid task ID: " + commandParts[2]);
             return;
         }
 
@@ -197,6 +216,7 @@ public class EntryPointController {
         commandBus.send(command);
 
         logger.info("Task with ID " + id + " removed successfully");
+        logCommand.log("remove",commandParts,null);
     }
 
     private void handleAddCommand(String[] commandParts) {
@@ -214,6 +234,7 @@ public class EntryPointController {
 
         if (content == null) {
             logger.info("Content is required for adding a task");
+            logCommand.log("add",commandParts,"Content is required for adding a task");
             return;
         }
 
@@ -221,6 +242,8 @@ public class EntryPointController {
         commandBus.send(command);
 
         logger.info("Task added successfully");
+        logCommand.log("add",commandParts,null);
+
     }
 
 }

@@ -4,10 +4,12 @@ package fr.esgi.taskmanager;
 import fr.esgi.taskmanager.application.exposition.EntryPointController;
 import fr.esgi.taskmanager.domain.command.*;
 
+import fr.esgi.taskmanager.domain.log.LogCommand;
 import fr.esgi.taskmanager.domain.query.GetAllTasksQuery;
 import fr.esgi.taskmanager.domain.query.GetAllTasksQueryHandler;
 import fr.esgi.taskmanager.domain.query.GetTaskByIdQuery;
 import fr.esgi.taskmanager.domain.query.GetTaskByIdQueryHandler;
+import fr.esgi.taskmanager.infra.log.LogCommandImpl;
 import fr.esgi.taskmanager.infra.repository.InMemoryTaskRepository;
 import fr.esgi.taskmanager.kernel.*;
 
@@ -32,7 +34,8 @@ public class Main {
 
         var commandBus = new SimpleCommandBus(commandHandlerMap);
         var queryBus = new SimpleQueryBus(queryHandlerMap);
-        var controller = new EntryPointController(commandBus,queryBus);
+        var logCommand = new LogCommandImpl();
+        var controller = new EntryPointController(commandBus,queryBus,logCommand);
         controller.handleAgendaCommand(args);
     }
 }

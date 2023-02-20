@@ -5,6 +5,7 @@ import fr.esgi.taskmanager.domain.command.AddTaskCommand;
 import fr.esgi.taskmanager.domain.command.RemoveTaskCommand;
 import fr.esgi.taskmanager.domain.command.UpdateStatusTaskCommand;
 import fr.esgi.taskmanager.domain.command.UpdateTaskCommand;
+import fr.esgi.taskmanager.domain.log.LogCommand;
 import fr.esgi.taskmanager.domain.model.Task;
 import fr.esgi.taskmanager.domain.model.TaskStatus;
 import fr.esgi.taskmanager.domain.query.GetAllTasksQuery;
@@ -35,14 +36,15 @@ public class EntryPointControllerTest {
 
     @Mock
     private CommandBus commandBus;
-
     @Mock
     private QueryBus queryBus;
+    @Mock
+    private LogCommand logCommand;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        controller = new EntryPointController(commandBus, queryBus);
+        controller = new EntryPointController(commandBus, queryBus,logCommand);
     }
 
     @Test
