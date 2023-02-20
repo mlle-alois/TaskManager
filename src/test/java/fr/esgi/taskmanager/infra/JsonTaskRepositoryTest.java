@@ -1,4 +1,4 @@
-package fr.esgi.taskmanager.application;
+package fr.esgi.taskmanager.infra;
 
 import fr.esgi.taskmanager.domain.model.Task;
 import fr.esgi.taskmanager.infra.repository.JsonTaskRepository;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Objects;
-
 public class JsonTaskRepositoryTest {
 
     @Test

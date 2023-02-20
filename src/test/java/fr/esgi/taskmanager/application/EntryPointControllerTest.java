@@ -14,14 +14,17 @@ import fr.esgi.taskmanager.kernel.CommandBus;
 import fr.esgi.taskmanager.kernel.QueryBus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+
 
 public class EntryPointControllerTest {
     private static final String ADD_COMMAND = "agenda add -c:task -d:2023-12-31";
